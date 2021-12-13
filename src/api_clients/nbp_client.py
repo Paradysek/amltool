@@ -9,6 +9,12 @@ class NBPModel:
     date: str
 
 
+@dataclass
+class GoldPrice:
+    date: str
+    price: float
+
+
 class NBPClient:
 
     def __init__(self):
@@ -33,3 +39,19 @@ class NBPClient:
             exchange_rate=rate['mid'],
             date=rate['effectiveDate']
         )
+
+    def get_gold_price_for_range(self, start_date, end_date):
+        res = requests.get(f'{self.base_url}/cenyzlota/{start_date}/{end_date}')
+        values = res.json()
+        records = []
+        for value in values:
+            record = GoldPrice(
+                date=value['data'],
+                price=value['cena']
+            )
+
+            records.append(record)
+        return records
+
+
+
