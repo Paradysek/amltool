@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import requests
+import json
 
 
 @dataclass
@@ -40,7 +41,7 @@ class TwelveDataClient:
 
     def __init__(self):
         self.base_url = 'https://api.twelvedata.com'
-        self.token = 'd47b661071de40f18a6d2cc8fd7ba710'
+        self.token = self._get_token()
 
     def get_exchange_rate_list(self,
                                interval: str,
@@ -125,3 +126,9 @@ class TwelveDataClient:
             type=meta['type'],
             values=records
         )
+
+    def _get_token(self):
+        with open('api_clients/token.json') as json_file:
+            data = json.load(json_file)
+
+        return data['token']
